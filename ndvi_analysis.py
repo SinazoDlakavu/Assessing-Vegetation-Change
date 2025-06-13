@@ -59,8 +59,17 @@ vis_params = {
     'max': 9000,
     'palette': ['white', 'yellow', 'green']
 }
-Map.addLayer(image_2023, vis_params, 'NDVI 2023')
+# Create an interactive map centered on the area
+Map = geemap.Map(center=[-30.6, 29.5], zoom=8)
+
+#Add each yearly NDVI image to the map
+for year in years:
+    image = ndvi_by_year.filter(ee.Filter.eq('year', year)).first()
+    Map.addLayer(image, vis_params, f'NDVI {year}')
+
+#Legend
+Map.add_Legend(title="NDVI", labels=["Low", "Medium", "High"], colors=["white", "yellow", "green"])
 
 # Export interactive map as HTML and open in browser
-Map.to_html('ndvi_2023_map.html')
-webbrowser.open('ndvi_2023_map.html')
+Map.to_html('ndvi_all_years_map.html')
+webbrowser.open('ndvi_all_years_map.html')
